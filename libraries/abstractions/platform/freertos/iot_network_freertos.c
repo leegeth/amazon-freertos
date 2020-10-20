@@ -504,6 +504,9 @@ size_t IotNetworkAfr_Send( void * pConnection,
             else
             {
                 IotLogError( "Error %ld while sending data.", ( long int ) socketStatus );
+                IotLogError( "Message of length %ld attempted to send.", ( long int ) messageLength );
+                IotLogError( "Message of length %ld completed send.", ( long int ) messageLength );
+                IotLogError( "Remaining bytes of %ld remaining to be sent.", ( long int ) bytesRemaining );
                 break;
             }
         }
