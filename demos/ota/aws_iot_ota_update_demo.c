@@ -326,7 +326,7 @@ static void App_OTACompleteCallback( OTA_JobEvent_t eEvent )
     /* OTA job is completed. so delete the MQTT and network connection. */
     if( eEvent == eOTA_JobEvent_Activate )
     {
-        IotLogInfo( "Received eOTA_JobEvent_Activate callback from OTA Agent.\r\n" );
+        IotLogError( "Received eOTA_JobEvent_Activate callback from OTA Agent.\r\n" );
 
         /* OTA job is completed. so delete the network connection. */
         if( _mqttConnection != NULL )
@@ -335,7 +335,7 @@ static void App_OTACompleteCallback( OTA_JobEvent_t eEvent )
         }
 
         /* Activate the new firmware image. */
-        OTA_ActivateNewImage();
+        //OTA_ActivateNewImage();
 
         /* We should never get here as new image activation must reset the device.*/
         IotLogError( "New image activation failed.\r\n" );
