@@ -340,8 +340,10 @@ static void App_OTACompleteCallback( OTA_JobEvent_t eEvent )
         /* We should never get here as new image activation must reset the device.*/
         IotLogError( "New image activation failed.\r\n" );
 
+
         for( ; ; )
         {
+            vTaskDelay( 1000 );
         }
     }
     else if( eEvent == eOTA_JobEvent_Fail )
