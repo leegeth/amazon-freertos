@@ -621,6 +621,153 @@ static void _subscribePublishWait( IotMqttQos_t qos )
 /*-----------------------------------------------------------*/
 
 /**
+ * @brief Run the subscribe-publish-wait tests at QoS1.
+ */
+static void _subscribePublishWaitThreadSafe1( void * pvParameters )
+{
+    IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
+    IotMqttQos_t qos = IOT_MQTT_QOS_1;
+    IotMqttSubscription_t subscription = IOT_MQTT_SUBSCRIPTION_INITIALIZER;
+    IotMqttPublishInfo_t publishInfo = IOT_MQTT_PUBLISH_INFO_INITIALIZER;
+    IotSemaphore_t waitSem;
+    IotSemaphore_t * pthreadSem = ( IotSemaphore_t * ) pvParameters;
+    uint32_t publishCount = 0;
+
+    /* Create the wait semaphore. */
+    TEST_ASSERT_EQUAL_INT( true, IotSemaphore_Create( &waitSem, 0, 1 ) );
+
+    if( TEST_PROTECT() )
+    {
+        /* Set the members of the subscription. */
+        subscription.qos = qos;
+        subscription.pTopicFilter = IOT_TEST_MQTT_TOPIC_PREFIX "/SubscribePublishWait";
+        subscription.topicFilterLength = ( uint16_t ) strlen( subscription.pTopicFilter );
+        subscription.callback.function = _publishReceived;
+        subscription.callback.pCallbackContext = &waitSem;
+
+        /* Subscribe to the test topic filter using the blocking SUBSCRIBE
+         * function. */
+        status = IotMqtt_TimedSubscribe( _mqttConnection,
+                                         &subscription,
+                                         1,
+                                         0,
+                                         IOT_TEST_MQTT_TIMEOUT_MS );
+        TEST_ASSERT_EQUAL( IOT_MQTT_SUCCESS, status );
+
+        /* Set the members of the publish info. */
+        publishInfo.qos = qos;
+        publishInfo.pTopicName = IOT_TEST_MQTT_TOPIC_PREFIX "/SubscribePublishWait";
+        publishInfo.topicNameLength = ( uint16_t ) strlen( publishInfo.pTopicName );
+        publishInfo.pPayload = _pSamplePayload;
+        publishInfo.payloadLength = _samplePayloadLength;
+
+        for( ; publishCount < 100; publishCount++ )
+        {
+            /* Publish the message. */
+            status = IotMqtt_TimedPublish( _mqttConnection,
+                                           &publishInfo,
+                                           0,
+                                           IOT_TEST_MQTT_TIMEOUT_MS );
+
+            /* Wait for the message to be received. */
+            if( IotSemaphore_TimedWait( &waitSem,
+                                        IOT_TEST_MQTT_TIMEOUT_MS ) == false )
+            {
+                TEST_FAIL_MESSAGE( "Timed out waiting for subscription." );
+            }
+        }
+
+        /* Unsubscribe from the test topic filter. */
+        status = IotMqtt_TimedUnsubscribe( _mqttConnection,
+                                           &subscription,
+                                           1,
+                                           0,
+                                           ( IOT_TEST_MQTT_TIMEOUT_MS * 5 ) );
+        TEST_ASSERT_EQUAL( IOT_MQTT_SUCCESS, status );
+    }
+
+    IotSemaphore_Post( pthreadSem );
+
+    IotSemaphore_Destroy( &waitSem );
+}
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Run the subscribe-publish-wait tests at QoS1.
+ */
+static void _subscribePublishWaitThreadSafe2( void * pvParameters )
+{
+    IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
+    IotMqttQos_t qos = IOT_MQTT_QOS_1;
+    IotMqttSubscription_t subscription = IOT_MQTT_SUBSCRIPTION_INITIALIZER;
+    IotMqttPublishInfo_t publishInfo = IOT_MQTT_PUBLISH_INFO_INITIALIZER;
+    IotSemaphore_t waitSem;
+    IotSemaphore_t * pthreadSem = ( IotSemaphore_t * ) pvParameters;
+    uint32_t publishCount = 0;
+
+    /* Create the wait semaphore. */
+    TEST_ASSERT_EQUAL_INT( true, IotSemaphore_Create( &waitSem, 0, 1 ) );
+
+    if( TEST_PROTECT() )
+    {
+        /* Set the members of the subscription. */
+        subscription.qos = qos;
+        subscription.pTopicFilter = IOT_TEST_MQTT_TOPIC_PREFIX "/SubscribePublishWait1";
+        subscription.topicFilterLength = ( uint16_t ) strlen( subscription.pTopicFilter );
+        subscription.callback.function = _publishReceived;
+        subscription.callback.pCallbackContext = &waitSem;
+
+        /* Subscribe to the test topic filter using the blocking SUBSCRIBE
+         * function. */
+        status = IotMqtt_TimedSubscribe( _mqttConnection,
+                                         &subscription,
+                                         1,
+                                         0,
+                                         IOT_TEST_MQTT_TIMEOUT_MS );
+        TEST_ASSERT_EQUAL( IOT_MQTT_SUCCESS, status );
+
+        /* Set the members of the publish info. */
+        publishInfo.qos = qos;
+        publishInfo.pTopicName = IOT_TEST_MQTT_TOPIC_PREFIX "/SubscribePublishWait1";
+        publishInfo.topicNameLength = ( uint16_t ) strlen( publishInfo.pTopicName );
+        publishInfo.pPayload = _pSamplePayload;
+        publishInfo.payloadLength = _samplePayloadLength;
+
+        for( ; publishCount < 100; publishCount++ )
+        {
+            /* Publish the message. */
+            status = IotMqtt_TimedPublish( _mqttConnection,
+                                           &publishInfo,
+                                           0,
+                                           IOT_TEST_MQTT_TIMEOUT_MS );
+
+            /* Wait for the message to be received. */
+            if( IotSemaphore_TimedWait( &waitSem,
+                                        IOT_TEST_MQTT_TIMEOUT_MS ) == false )
+            {
+                TEST_FAIL_MESSAGE( "Timed out waiting for subscription." );
+            }
+        }
+
+        /* Unsubscribe from the test topic filter. */
+        status = IotMqtt_TimedUnsubscribe( _mqttConnection,
+                                           &subscription,
+                                           1,
+                                           0,
+                                           ( IOT_TEST_MQTT_TIMEOUT_MS * 5 ) );
+        TEST_ASSERT_EQUAL( IOT_MQTT_SUCCESS, status );
+    }
+
+    IotSemaphore_Post( pthreadSem );
+
+    IotSemaphore_Destroy( &waitSem );
+}
+
+
+/*-----------------------------------------------------------*/
+
+/**
  * @brief Test group for MQTT system tests.
  */
 TEST_GROUP( MQTT_System );
@@ -719,13 +866,15 @@ TEST_TEAR_DOWN( MQTT_System )
  */
 TEST_GROUP_RUNNER( MQTT_System )
 {
-    RUN_TEST_CASE( MQTT_System, SubscribePublishWaitQoS0 );
-    RUN_TEST_CASE( MQTT_System, SubscribePublishWaitQoS1 );
-    RUN_TEST_CASE( MQTT_System, SubscribePublishAsync );
-    RUN_TEST_CASE( MQTT_System, LastWillAndTestament );
-    RUN_TEST_CASE( MQTT_System, RestorePreviousSession );
-    RUN_TEST_CASE( MQTT_System, SubscribeCompleteReentrancy );
-    RUN_TEST_CASE( MQTT_System, IncomingPublishReentrancy )
+    /*RUN_TEST_CASE( MQTT_System, SubscribePublishWaitQoS0 );
+     * RUN_TEST_CASE( MQTT_System, SubscribePublishWaitQoS1 );
+     * RUN_TEST_CASE( MQTT_System, SubscribePublishAsync );
+     * RUN_TEST_CASE( MQTT_System, LastWillAndTestament );
+     * RUN_TEST_CASE( MQTT_System, RestorePreviousSession );
+     * RUN_TEST_CASE( MQTT_System, SubscribeCompleteReentrancy );
+     * RUN_TEST_CASE( MQTT_System, IncomingPublishReentrancy );
+     */
+    RUN_TEST_CASE( MQTT_System, ConnectionSharing );
 }
 
 /*-----------------------------------------------------------*/
@@ -1242,6 +1391,103 @@ TEST( MQTT_System, IncomingPublishReentrancy )
     }
 
     IotSemaphore_Destroy( &( pWaitSemaphores[ 0 ] ) );
+}
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Test that API functions can be invoked from a callback for an incoming
+ * PUBLISH.
+ */
+TEST( MQTT_System, ConnectionSharing )
+{
+    IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
+    IotMqttNetworkInfo_t networkInfo = _networkInfo;
+    IotMqttConnectInfo_t connectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
+    IotSemaphore_t waitSem;
+    IotSemaphore_t waitSem2;
+
+    /* The serializer must be static so that it remains in scope for the lifetime
+     * of the MQTT connection (after this function returns). */
+    static IotMqttSerializer_t serializer = IOT_MQTT_SERIALIZER_INITIALIZER;
+
+    /* Initialize the serializer on the first run, when any function pointer
+     * in the serializer is NULL. */
+    if( serializer.freePacket == NULL )
+    {
+        serializer = *_pMqttSerializer;
+        serializer.freePacket = _freePacket;
+        serializer.serialize.connect = _serializeConnect;
+        serializer.serialize.publish = _serializePublish;
+        serializer.serialize.puback = _serializePuback;
+        serializer.serialize.subscribe = _serializeSubscribe;
+        serializer.serialize.unsubscribe = _serializeUnsubscribe;
+        serializer.serialize.disconnect = _serializeDisconnect;
+    }
+
+    /* Set the serializer function pointers. */
+    networkInfo.pMqttSerializer = &serializer;
+
+    if( TEST_PROTECT() )
+    {
+        /* Create the wait semaphore. */
+        TEST_ASSERT_EQUAL_INT( true, IotSemaphore_Create( &waitSem, 0, 1 ) );
+
+        /* Create the wait semaphore. */
+        TEST_ASSERT_EQUAL_INT( true, IotSemaphore_Create( &waitSem2, 0, 1 ) );
+
+        /* Set the members of the MQTT connection info. */
+        connectInfo.awsIotMqttMode = AWS_IOT_MQTT_SERVER;
+        connectInfo.cleanSession = true;
+        connectInfo.pClientIdentifier = _pClientIdentifier;
+        connectInfo.clientIdentifierLength = ( uint16_t ) strlen( _pClientIdentifier );
+
+        /* Establish the MQTT connection. */
+        status = _mqttConnect( &networkInfo,
+                               &connectInfo,
+                               IOT_TEST_MQTT_TIMEOUT_MS,
+                               &_mqttConnection );
+        TEST_ASSERT_EQUAL( IOT_MQTT_SUCCESS, status );
+    }
+
+    /* Create a task to test subscribe and publish using established MQTT connection.*/
+    if( TEST_PROTECT() )
+    {
+        xTaskCreate( _subscribePublishWaitThreadSafe1,
+                     "CONSHARE",
+                     configMINIMAL_STACK_SIZE,
+                     &waitSem,
+                     tskIDLE_PRIORITY,
+                     NULL );
+    }
+
+    /* Run the same logic from test task as well. */
+    if( TEST_PROTECT() )
+    {
+        xTaskCreate( _subscribePublishWaitThreadSafe2,
+                     "CONSHARE2",
+                     configMINIMAL_STACK_SIZE,
+                     &waitSem2,
+                     tskIDLE_PRIORITY,
+                     NULL );
+    }
+
+    if( IotSemaphore_TimedWait( &waitSem,
+                                ( IOT_TEST_MQTT_TIMEOUT_MS * 10 ) ) == false )
+    {
+        TEST_FAIL_MESSAGE( "Timed out waiting for subscription." );
+    }
+
+    if( IotSemaphore_TimedWait( &waitSem2,
+                                ( IOT_TEST_MQTT_TIMEOUT_MS * 10 ) ) == false )
+    {
+        TEST_FAIL_MESSAGE( "Timed out waiting for subscription." );
+    }
+
+    /* Close the MQTT connection. */
+    /*IotMqtt_Disconnect( _mqttConnection, 0 ); */
+    IotSemaphore_Destroy( &waitSem );
+    IotSemaphore_Destroy( &waitSem2 );
 }
 
 /*-----------------------------------------------------------*/
