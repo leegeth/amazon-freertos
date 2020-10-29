@@ -1640,6 +1640,7 @@ IotMqttError_t IotMqtt_TimedUnsubscribe( IotMqttConnection_t mqttConnection,
                                   NULL,
                                   &unsubscribeOperation );
 
+    IotLogInfo( "Lee: IotMqtt_Unsubscribe returned and attempting to call wait with status %d.", status );
     /* Wait for the UNSUBSCRIBE operation to complete. */
     if( status == IOT_MQTT_STATUS_PENDING )
     {
@@ -1650,6 +1651,7 @@ IotMqttError_t IotMqtt_TimedUnsubscribe( IotMqttConnection_t mqttConnection,
         EMPTY_ELSE_MARKER;
     }
 
+    IotLogInfo( "Lee: IotMqtt_Unsubscribe returned and after calling wait with status %d.", status );
     /* Ensure that a status was set. */
     IotMqtt_Assert( status != IOT_MQTT_STATUS_PENDING );
 

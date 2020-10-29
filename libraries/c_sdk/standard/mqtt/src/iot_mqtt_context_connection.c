@@ -44,7 +44,6 @@
 /* Using initialized connToContext variable. */
 extern _connContext_t connToContext[ MAX_NO_OF_MQTT_CONNECTIONS ];
 
-
 /*-----------------------------------------------------------*/
 
 int8_t _IotMqtt_getFreeIndexFromContextConnectionArray( void )
