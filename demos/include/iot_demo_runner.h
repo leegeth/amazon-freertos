@@ -150,6 +150,14 @@
     #endif
 #elif defined( CONFIG_DEFENDER_DEMO_ENABLED )
     #define DEMO_entryFUNCTION              RunDefenderDemo
+    #if defined( democonfigDEFENDER_TASK_STACK_SIZE )
+        #undef democonfigDEMO_STACKSIZE
+        #define democonfigDEMO_STACKSIZE    democonfigDEFENDER_TASK_STACK_SIZE
+    #endif
+    #if defined( democonfigDEFENDER_TASK_PRIORITY )
+        #undef democonfigDEMO_PRIORITY
+        #define democonfigDEMO_PRIORITY     democonfigDEFENDER_TASK_PRIORITY
+    #endif
 #elif defined( CONFIG_POSIX_DEMO_ENABLED )
     #define DEMO_entryFUNCTION              vStartPOSIXDemo
 #elif defined( CONFIG_OTA_UPDATE_DEMO_ENABLED )

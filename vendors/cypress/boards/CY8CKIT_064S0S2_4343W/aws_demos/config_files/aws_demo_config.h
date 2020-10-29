@@ -35,7 +35,7 @@
  *          CONFIG_CORE_MQTT_KEEP_ALIVE_DEMO_ENABLED
  *          CONFIG_CORE_MQTT_PLAINTEXT_DEMO_ENABLED
  *          CONFIG_CORE_MQTT_SERIALIZER_DEMO_ENABLED
- *          CONFIG_DEVICE_SHADOW_DEMO_ENABLED 
+ *          CONFIG_DEVICE_SHADOW_DEMO_ENABLED
  *          CONFIG_CORE_MQTT_CONNECTION_SHARING_DEMO_ENABLED
  *          CONFIG_SHADOW_DEMO_ENABLED
  *          CONFIG_GREENGRASS_DISCOVERY_DEMO_ENABLED
@@ -50,7 +50,7 @@
 
 /* Default configuration for all demos. Individual demos can override these below */
 #define democonfigDEMO_STACKSIZE                       ( configMINIMAL_STACK_SIZE * 8 )
-#define democonfigDEMO_PRIORITY                        ( tskIDLE_PRIORITY + 2 )
+#define democonfigDEMO_PRIORITY                        ( tskIDLE_PRIORITY )
 #define democonfigNETWORK_TYPES                        ( AWSIOT_NETWORK_TYPE_WIFI )
 
 #define democonfigSHADOW_DEMO_NUM_TASKS                ( 2 )
@@ -81,6 +81,10 @@
 /* Greengrass discovery example task parameters. */
 #define democonfigGREENGRASS_DISCOVERY_TASK_STACK_SIZE               ( configMINIMAL_STACK_SIZE * 32 )
 #define democonfigGREENGRASS_DISCOVERY_TASK_PRIORITY                 ( tskIDLE_PRIORITY + 2 )
+
+/* Defender example task parameters. */
+#define democonfigDEFENDER_TASK_STACK_SIZE                           ( configMINIMAL_STACK_SIZE * 12 )
+#define democonfigDEFENDER_TASK_PRIORITY                             ( tskIDLE_PRIORITY + 2 )
 
 /* MQTT Connection sharing demo task priority. */
 #define democonfigCORE_MQTT_CONNECTION_SHARING_DEMO_TASK_PRIORITY    ( tskIDLE_PRIORITY + 1 )
