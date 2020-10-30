@@ -62,7 +62,7 @@
 
 #define ggdDEMO_MAX_MQTT_MESSAGES              3
 #define ggdDEMO_MAX_MQTT_MSG_SIZE              500
-#define ggdDEMO_DISCOVERY_FILE_SIZE            2500
+#define ggdDEMO_DISCOVERY_FILE_SIZE            4000
 #define ggdDEMO_MQTT_MSG_TOPIC                 "freertos/demos/ggd"
 #define ggdDEMO_MQTT_MSG_DISCOVERY             "{\"message\":\"Hello #%lu from FreeRTOS to Greengrass Core.\"}"
 
@@ -208,6 +208,7 @@ static int _discoverGreengrassCore( const IotNetworkInterface_t * pNetworkInterf
     IotMqttError_t mqttStatus = IOT_MQTT_SUCCESS;
     GGD_HostAddressData_t xHostAddressData;
     IotMqttConnection_t mqttConnection = IOT_MQTT_CONNECTION_INITIALIZER;
+    int i = 0;
 
     memset( &xHostAddressData, 0, sizeof( xHostAddressData ) );
 
@@ -223,6 +224,16 @@ static int _discoverGreengrassCore( const IotNetworkInterface_t * pNetworkInterf
         == pdPASS )
     {
         IotLogInfo( "Greengrass device discovered." );
+
+        IotLogInfo( "Lee start JSON file.." );
+
+        for( i=0; i<ggdDEMO_DISCOVERY_FILE_SIZE; i=i+100 )
+        {
+            IotLogInfo("%.*s",100,(pcJSONFile + i) );
+        }
+
+        IotLogInfo( "Lee end JSON file.." );
+
         mqttStatus = _mqttConnect( &xHostAddressData, pNetworkInterface, &mqttConnection );
 
         if( mqttStatus == IOT_MQTT_SUCCESS )
