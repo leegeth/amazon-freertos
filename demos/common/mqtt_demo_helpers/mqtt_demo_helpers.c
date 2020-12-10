@@ -461,14 +461,10 @@ void vHandleOtherIncomingPacket( MQTTPacketInfo_t * pxPacketInfo,
     {
         case MQTT_PACKET_TYPE_SUBACK:
             LogInfo( ( "MQTT_PACKET_TYPE_SUBACK.\n\n" ) );
-            /* Make sure ACK packet identifier matches with Request packet identifier. */
-            assert( globalSubscribePacketIdentifier == usPacketIdentifier );
             break;
 
         case MQTT_PACKET_TYPE_UNSUBACK:
             LogInfo( ( "MQTT_PACKET_TYPE_UNSUBACK.\n\n" ) );
-            /* Make sure ACK packet identifier matches with Request packet identifier. */
-            assert( globalUnsubscribePacketIdentifier == usPacketIdentifier );
             break;
 
         case MQTT_PACKET_TYPE_PINGRESP:
