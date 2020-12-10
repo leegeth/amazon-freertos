@@ -819,6 +819,8 @@ int RunJobsDemo( bool awsIotMqttMode,
             }
         }
 
+        LogInfo( ( "Waiting for Jobs..." ) );
+
         /* Keep on running the demo until we receive a job for the "exit" action to exit the demo. */
         while( ( xExitActionJobReceived == pdFALSE ) &&
                ( xDemoEncounteredError == pdFALSE ) &&
