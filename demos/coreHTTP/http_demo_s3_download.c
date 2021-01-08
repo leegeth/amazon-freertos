@@ -230,7 +230,9 @@ static const char * pcPath;
  *
  * @return pdFAIL on failure; pdPASS on successful connection.
  */
-static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext );
+static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext,
+                                      SocketsConfig_t * pxSocketsConfig,
+                                      ServerInfo_t * pxServerInfo );
 
 /**
  * @brief Retrieve the size of the S3 object that is specified in pcPath.
@@ -270,7 +272,9 @@ static BaseType_t prvDownloadS3ObjectFile( const TransportInterface_t * pxTransp
 
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext )
+static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext,
+                                      SocketsConfig_t * pxSocketsConfig,
+                                      ServerInfo_t * pxServerInfo )
 {
     ServerInfo_t xServerInfo = { 0 };
     SocketsConfig_t xSocketsConfig = { 0 };

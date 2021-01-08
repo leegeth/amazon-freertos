@@ -44,7 +44,9 @@
  *
  * @return pdFAIL on failure; pdPASS on successful connection.
  */
-typedef BaseType_t ( * TransportConnect_t )( NetworkContext_t * pxNetworkContext );
+typedef BaseType_t ( * TransportConnect_t )( NetworkContext_t * pxNetworkContext,
+                                             SocketsConfig_t * pxSocketsConfig,
+                                             ServerInfo_t * pxServerInfo );
 
 /**
  * @brief Connect to a server with reconnection retries.
@@ -61,8 +63,8 @@ typedef BaseType_t ( * TransportConnect_t )( NetworkContext_t * pxNetworkContext
  */
 BaseType_t connectToServerWithBackoffRetries( TransportConnect_t connectFunction,
                                               NetworkContext_t * pxNetworkContext,
-                                      SocketsConfig_t * pxSocketsConfig,
-                                      ServerInfo_t * pxServerInfo );
+                                              SocketsConfig_t * pxSocketsConfig,
+                                              ServerInfo_t * pxServerInfo );
 
 /**
  * @brief Retrieve the path from the input URL.

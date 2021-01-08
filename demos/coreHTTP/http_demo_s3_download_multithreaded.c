@@ -326,7 +326,9 @@ static TaskHandle_t xMainTask;
  *
  * @return pdFAIL on failure; pdPASS on successful connection.
  */
-static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext );
+static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext,
+                                      SocketsConfig_t * pxSocketsConfig,
+                                      ServerInfo_t * pxServerInfo );
 
 /**
  * @brief Send continuous range requests until the entire S3 file is downloaded,
@@ -414,7 +416,9 @@ static void prvTearDown( TaskHandle_t xHandle,
 
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext )
+static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext,
+                                      SocketsConfig_t * pxSocketsConfig,
+                                      ServerInfo_t * pxServerInfo )
 {
     ServerInfo_t xServerInfo = { 0 };
     SocketsConfig_t xSocketsConfig = { 0 };
