@@ -107,6 +107,11 @@
 #define ggdDEMO_RETRY_WAIT_MS                  2000
 
 /**
+ * @brief The number of topic filters to subscribe.
+ */
+#define mqttexampleTOPIC_COUNT                 ( 1 )
+
+/**
  * @brief The length in bytes of the user buffer.
  */
 #define democonfigUSER_BUFFER_LENGTH           ( 2500 )
@@ -140,7 +145,18 @@
 /**
  * @brief Milliseconds per FreeRTOS tick.
  */
-#define MILLISECONDS_PER_TICK    ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
+#define MILLISECONDS_PER_TICK                      ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
+
+/**
+ * @brief Timeout for MQTT_ProcessLoop in milliseconds.
+ */
+#define PROCESS_LOOP_TIMEOUT_MS                    ( 700U )
+
+/**
+ * @brief The maximum number of times to call MQTT_ProcessLoop() when polling
+ * for a specific packet from the broker.
+ */
+#define MQTT_PROCESS_LOOP_PACKET_WAIT_COUNT_MAX    ( 30U )
 
 /**
  * @brief Each compilation unit that consumes the NetworkContext must define it.
@@ -153,7 +169,6 @@ struct NetworkContext
 {
     SecureSocketsTransportParams_t * pParams;
 };
-
 
 /**
  * @brief Global entry time into the application to use as a reference timestamp
@@ -183,6 +198,20 @@ static uint8_t ucUserBuffer[ democonfigUSER_BUFFER_LENGTH ];
  * @brief Static buffer used to hold MQTT messages being sent and received.
  */
 static uint8_t ucSharedBuffer[ democonfigNETWORK_BUFFER_SIZE ];
+
+/**
+ * @brief MQTT packet type received from the MQTT broker.
+ *
+ * @note Only on receiving incoming PUBLISH, SUBACK, and UNSUBACK, this
+ * variable is updated. For MQTT packets PUBACK and PINGRESP, the variable is
+ * not updated since there is no need to specifically wait for it in this demo.
+ * A single variable suffices as this demo uses single task and requests one operation
+ * (of PUBLISH, SUBSCRIBE, UNSUBSCRIBE) at a time before expecting response from
+ * the broker. Hence it is not possible to receive multiple packets of type PUBLISH,
+ * SUBACK, and UNSUBACK in a single call of #prvWaitForPacket.
+ * For a multi task application, consider a different method to wait for the packet, if needed.
+ */
+static uint16_t usPacketTypeReceived = 0U;
 
 /** @brief Static buffer used to hold MQTT messages being sent and received. */
 static MQTTFixedBuffer_t xBuffer =
@@ -237,20 +266,13 @@ static BaseType_t prvGetGGCoreJSON( char ** ppcJSONFile,
                                     uint32_t * plJSONFileLength );
 
 /**
- * @brief Send MQTT messages to Greengrass core.
- *
- * @param[in] pxMQTTContext The pointer to coreMQTT context.
- *
- * @return pdFAIL on failure; pdPASS on success.
- */
-static BaseType_t _sendMessageToGGC( MQTTContext_t * pxMQTTContext );
-
-/**
  * @brief Logic for Greengrass discovery demo.
  *
  * @return pdFAIL on failure; pdPASS on success.
  */
 static int _discoverGreengrassCoreDemo();
+
+/*-----------------------------------------------------------*/
 
 static uint32_t prvGetTimeMs( void )
 {
@@ -270,16 +292,30 @@ static uint32_t prvGetTimeMs( void )
     return ulTimeMs;
 }
 
+/*-----------------------------------------------------------*/
+
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo )
 {
     ( void ) pxMQTTContext;
-    ( void ) pxPacketInfo;
     ( void ) pxDeserializedInfo;
+
+    if( ( pxPacketInfo->type & 0xF0U ) == MQTT_PACKET_TYPE_PUBLISH )
+    {
+        usPacketTypeReceived = MQTT_PACKET_TYPE_PUBLISH;
+        LogInfo( ( "Incoming publish: %.*s .......\r\n\r\n",
+                   ( int32_t ) pxDeserializedInfo->pPublishInfo->payloadLength,
+                   pxDeserializedInfo->pPublishInfo->pPayload ) );
+    }
+    else
+    {
+        usPacketTypeReceived = pxPacketInfo->type;
+    }
 }
 
 /*-----------------------------------------------------------*/
+
 static uint32_t prvConvertCertificateJSONToString( char * certbuf,
                                                    size_t certlen )
 {
@@ -306,6 +342,8 @@ static uint32_t prvConvertCertificateJSONToString( char * certbuf,
 
     return ulWriteIndex;
 }
+
+/*-----------------------------------------------------------*/
 
 static BaseType_t prvGGDGetCertificate( char * pcJSONFile,
                                         uint32_t ulJSONFileSize,
@@ -344,6 +382,8 @@ static BaseType_t prvGGDGetCertificate( char * pcJSONFile,
 
     return xStatus;
 }
+
+/*-----------------------------------------------------------*/
 
 static BaseType_t prvGGDGetIPOnInterface( char * pcJSONFile,
                                           const uint32_t ulJSONFileSize,
@@ -396,48 +436,6 @@ static BaseType_t prvGGDGetIPOnInterface( char * pcJSONFile,
     return xStatus;
 }
 
-static BaseType_t _sendMessageToGGC( MQTTContext_t * pxMQTTContext )
-{
-    const char * pcTopic = ggdDEMO_MQTT_MSG_TOPIC;
-    uint32_t ulMessageCounter;
-    char cBuffer[ ggdDEMO_MAX_MQTT_MSG_SIZE ];
-    MQTTStatus_t xResult;
-    MQTTPublishInfo_t xMQTTPublishInfo;
-    BaseType_t xStatus = pdPASS;
-
-    /* Some fields are not used by this demo so start with everything at 0. */
-    ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
-
-    /* This demo uses QoS0. */
-    xMQTTPublishInfo.qos = MQTTQoS0;
-    xMQTTPublishInfo.retain = false;
-    xMQTTPublishInfo.pTopicName = pcTopic;
-    xMQTTPublishInfo.topicNameLength = ( uint16_t ) strlen( pcTopic );
-
-    for( ulMessageCounter = 0; ulMessageCounter < ( uint32_t ) ggdDEMO_MAX_MQTT_MESSAGES; ulMessageCounter++ )
-    {
-        xMQTTPublishInfo.pPayload = ( const void * ) cBuffer;
-        xMQTTPublishInfo.payloadLength = ( uint32_t ) sprintf( cBuffer, ggdDEMO_MQTT_MSG_DISCOVERY, ( long unsigned int ) ulMessageCounter );
-
-
-        /* Get a unique packet id. */
-        usPublishPacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
-
-        /* Send PUBLISH packet. Packet ID is not used for a QoS1 publish. */
-        xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier );
-
-        if( xResult != MQTTSuccess )
-        {
-            xStatus = pdFAIL;
-            LogError( ( "Failed to send PUBLISH message to broker: Topic=%s, Error=%s",
-                        pcTopic,
-                        MQTT_Status_strerror( xResult ) ) );
-        }
-    }
-
-    return xStatus;
-}
-
 /*-----------------------------------------------------------*/
 
 static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext,
@@ -447,15 +445,13 @@ static BaseType_t prvConnectToServer( NetworkContext_t * pxNetworkContext,
     BaseType_t xStatus = pdPASS;
     TransportSocketStatus_t xNetworkStatus = TRANSPORT_SOCKET_STATUS_SUCCESS;
 
-
-
     /* Establish a TLS session with the HTTP server. This example connects to
      * the HTTP server as specified in democonfigAWS_IOT_ENDPOINT and
      * democonfigAWS_HTTP_PORT in http_demo_mutual_auth_config.h. */
     LogInfo( ( "Establishing a TLS session to %.*s:%d.",
-               ( int32_t ) strlen( clientcredentialMQTT_BROKER_ENDPOINT ),
-               clientcredentialMQTT_BROKER_ENDPOINT,
-               clientcredentialGREENGRASS_DISCOVERY_PORT ) );
+               pxServerInfo->hostNameLength,
+               pxServerInfo->pHostName,
+               pxServerInfo->port ) );
 
     /* Attempt to create a mutually authenticated TLS connection. */
     xNetworkStatus = SecureSocketsTransport_Connect( pxNetworkContext,
@@ -681,6 +677,103 @@ static BaseType_t prvGetGGCoreJSON( char ** ppcJSONFile,
 
     return xStatus;
 }
+
+/*-----------------------------------------------------------*/
+
+static MQTTStatus_t prvWaitForPacket( MQTTContext_t * pxMQTTContext,
+                                      uint16_t usPacketType )
+{
+    uint8_t ucCount = 0U;
+    MQTTStatus_t xMQTTStatus = MQTTSuccess;
+
+    /* Reset the packet type received. */
+    usPacketTypeReceived = 0U;
+
+    while( ( usPacketTypeReceived != usPacketType ) &&
+           ( ucCount++ < MQTT_PROCESS_LOOP_PACKET_WAIT_COUNT_MAX ) &&
+           ( xMQTTStatus == MQTTSuccess ) )
+    {
+        /* Event callback will set #usPacketTypeReceived when receiving appropriate packet. This
+         * will wait for at most PROCESS_LOOP_TIMEOUT_MS. */
+        xMQTTStatus = MQTT_ProcessLoop( pxMQTTContext, PROCESS_LOOP_TIMEOUT_MS );
+    }
+
+    if( ( xMQTTStatus != MQTTSuccess ) || ( usPacketTypeReceived != usPacketType ) )
+    {
+        LogError( ( "MQTT_ProcessLoop failed to receive packet: Packet type=%02X, LoopDuration=%u, Status=%s",
+                    usPacketType,
+                    ( PROCESS_LOOP_TIMEOUT_MS * ucCount ),
+                    MQTT_Status_strerror( xMQTTStatus ) ) );
+    }
+
+    return xMQTTStatus;
+}
+
+/*-----------------------------------------------------------*/
+
+static BaseType_t prvMQTTSubscribe( MQTTContext_t * pxMQTTContext )
+{
+    MQTTStatus_t xResult = MQTTSuccess;
+    BaseType_t xBackoffStatus = pdFAIL;
+    MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
+    BaseType_t xFailedSubscribeToTopic = pdFALSE;
+    uint32_t ulTopicCount = 0U;
+    BaseType_t xStatus = pdFAIL;
+    uint16_t usSubscribePacketIdentifier;
+
+    /* Some fields not used by this demo so start with everything at 0. */
+    ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
+
+    /* Get a unique packet id. */
+    usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
+
+    /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
+     * only one topic and uses QoS0. */
+    xMQTTSubscription[ 0 ].qos = MQTTQoS0;
+    xMQTTSubscription[ 0 ].pTopicFilter = ggdDEMO_MQTT_MSG_TOPIC;
+    xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( ggdDEMO_MQTT_MSG_TOPIC );
+
+    /* The client is now connected to the broker. Subscribe to the topic
+     * as specified in mqttexampleTOPIC at the top of this file by sending a
+     * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
+     * This client will then publish to the same topic it subscribed to, so it
+     * will expect all the messages it sends to the broker to be sent back to it
+     * from the broker. This demo uses QOS0 in Subscribe, therefore, the Publish
+     * messages received from the broker will have QOS0. */
+    LogInfo( ( "Attempt to subscribe to the MQTT topic %s.", ggdDEMO_MQTT_MSG_TOPIC ) );
+    xResult = MQTT_Subscribe( pxMQTTContext,
+                              xMQTTSubscription,
+                              sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                              usSubscribePacketIdentifier );
+
+    if( xResult != MQTTSuccess )
+    {
+        LogError( ( "Failed to SUBSCRIBE to MQTT topic %s. Error=%s",
+                    ggdDEMO_MQTT_MSG_TOPIC, MQTT_Status_strerror( xResult ) ) );
+    }
+    else
+    {
+        xStatus = pdPASS;
+        LogInfo( ( "SUBSCRIBE sent for topic %s to broker.", ggdDEMO_MQTT_MSG_TOPIC ) );
+
+        /* Process incoming packet from the broker. After sending the subscribe, the
+         * client may receive a publish before it receives a subscribe ack. Therefore,
+         * call generic incoming packet processing function. Since this demo is
+         * subscribing to the topic to which no one is publishing, probability of
+         * receiving Publish message before subscribe ack is zero; but application
+         * must be ready to receive any packet.  This demo uses the generic packet
+         * processing function everywhere to highlight this fact. */
+        xResult = prvWaitForPacket( pxMQTTContext, MQTT_PACKET_TYPE_SUBACK );
+
+        if( xResult != MQTTSuccess )
+        {
+            xStatus = pdFAIL;
+        }
+    }
+
+    return xStatus;
+}
+
 /*-----------------------------------------------------------*/
 
 static int _discoverGreengrassCoreDemo()
@@ -805,9 +898,25 @@ static int _discoverGreengrassCoreDemo()
 
     if( xDemoStatus == pdPASS )
     {
-        _sendMessageToGGC( &xMQTTContext );
+        xDemoStatus = prvMQTTSubscribe( &xMQTTContext );
 
-        LogInfo( ( "Disconnecting from broker." ) );
+        if( xDemoStatus == pdPASS )
+        {
+            LogInfo( ( " Subscribed to topic %s.", ggdDEMO_MQTT_MSG_TOPIC ) );
+        }
+
+        while( xResult == MQTTSuccess )
+        {
+            /* Wait for an incoming publish packet. */
+            xResult = prvWaitForPacket( &xMQTTContext, MQTT_PACKET_TYPE_PUBLISH );
+
+            if( xResult != MQTTSuccess )
+            {
+                LogError( ( "Failed to receive an incoming publish. Exiting the demo." ) );
+            }
+        }
+
+        LogInfo( ( "Disconnecting from GG Core broker." ) );
 
         xResult = MQTT_Disconnect( &xMQTTContext );
         SecureSocketsTransport_Disconnect( &xNetworkContext );
