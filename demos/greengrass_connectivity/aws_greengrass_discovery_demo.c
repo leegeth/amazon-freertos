@@ -99,7 +99,8 @@
 #define ggdDEMO_MAX_MQTT_MESSAGES              3
 #define ggdDEMO_MAX_MQTT_MSG_SIZE              500
 #define ggdDEMO_MQTT_MSG_TOPIC                 "freertos/demos/ggd"
-#define ggdDEMO_MQTT_MSG_DISCOVERY             "{\"message\":\"Hello #%lu from FreeRTOS to Greengrass Core.\"}"
+#define ggdDEMO_MQTT_MSG_RESPONSE              "Response to %.*s"
+#define ggdDEMO_MQTT_RESPONSE_TOPIC            ggdDEMO_MQTT_MSG_TOPIC "/response"
 
 #define ggdDEMO_KEEP_ALIVE_INTERVAL_SECONDS    1200
 /* Number of times to try MQTT connection. */
@@ -298,6 +299,12 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo )
 {
+    MQTTPublishInfo_t xMQTTPublishInfo;
+    MQTTStatus_t xResult;
+    char cBuffer[ ggdDEMO_MAX_MQTT_MSG_SIZE ];
+    uint16_t usPublishPacketIdentifier;
+    const char * pcTopic = ggdDEMO_MQTT_RESPONSE_TOPIC;
+
     ( void ) pxMQTTContext;
     ( void ) pxDeserializedInfo;
 
@@ -307,6 +314,37 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
         LogInfo( ( "Incoming publish: %.*s .......\r\n\r\n",
                    ( int32_t ) pxDeserializedInfo->pPublishInfo->payloadLength,
                    pxDeserializedInfo->pPublishInfo->pPayload ) );
+
+        /* Some fields are not used by this demo so start with everything at 0. */
+        ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
+
+        /* This demo uses QoS0. */
+        xMQTTPublishInfo.qos = MQTTQoS0;
+        xMQTTPublishInfo.retain = false;
+        xMQTTPublishInfo.pTopicName = pcTopic;
+        xMQTTPublishInfo.topicNameLength = ( uint16_t ) strlen( pcTopic );
+
+        xMQTTPublishInfo.pPayload = ( const void * ) cBuffer;
+        xMQTTPublishInfo.payloadLength = ( uint32_t ) sprintf( cBuffer,
+                                                                ggdDEMO_MQTT_MSG_RESPONSE,
+                                                               ( int32_t ) pxDeserializedInfo->pPublishInfo->payloadLength,
+                                                               pxDeserializedInfo->pPublishInfo->pPayload );
+        /* Get a unique packet id. */
+        usPublishPacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
+
+        /* Send PUBLISH packet. Packet ID is not used for a QoS1 publish. */
+        xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, usPublishPacketIdentifier );
+
+        if( xResult != MQTTSuccess )
+        {
+            LogError( ( "Failed to send PUBLISH message to broker: Topic=%s, Error=%s",
+                        pcTopic,
+                        MQTT_Status_strerror( xResult ) ) );
+        }
+        else
+        {
+            LogInfo( ( "Sent PUBLISH Topic=%s, payload=%s.\r\n\r\n", pcTopic, cBuffer ) );
+        }
     }
     else
     {
