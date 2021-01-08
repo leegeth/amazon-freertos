@@ -153,7 +153,6 @@
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../libraries/coreHTTP/source/interface"/>
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../libraries/coreHTTP/source/dependency/3rdparty/http_parser"/>
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../demos/common/http_demo_helpers"/>
-									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../libraries/freertos_plus/aws/greengrass/include"/>
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../libraries/freertos_plus/standard/freertos_plus_cli/include"/>
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../libraries/abstractions/posix/include"/>
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../vendors/nxp/boards/lpc54018iotmodule/ports/posix"/>
@@ -170,7 +169,6 @@
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../libraries/3rdparty/mbedtls/include/mbedtls"/>
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../libraries/3rdparty/mbedtls_utils"/>
 									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../libraries/3rdparty/tinycbor/src"/>
-									<listOptionValue builtIn="false" value="${ProjDirPath}/../../../../../libraries/3rdparty/jsmn"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.files.831986787" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1594779853" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false"/>

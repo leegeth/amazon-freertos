@@ -416,9 +416,6 @@
 					<state>$PROJ_DIR$\..\..\..\..\..\libraries\coreHTTP\source\interface</state>
 					<state>$PROJ_DIR$\..\..\..\..\..\libraries\coreHTTP\source\dependency\3rdparty\http_parser</state>
 					<state>$PROJ_DIR$\..\..\..\..\..\demos\common\http_demo_helpers</state>
-					<state>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\test</state>
-					<state>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\include</state>
-					<state>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\src</state>
 					<state>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\standard\freertos_plus_cli\include</state>
 					<state>$PROJ_DIR$\..\..\..\..\..\libraries\abstractions\posix\include</state>
 					<state>$PROJ_DIR$\..\..\..\..\..\vendors\nxp\boards\lpc54018iotmodule\ports\posix</state>
@@ -437,7 +434,6 @@
 					<state>$PROJ_DIR$\..\..\..\..\..\libraries\3rdparty\unity\src</state>
 					<state>$PROJ_DIR$\..\..\..\..\..\libraries\3rdparty\unity\extras\fixture\src</state>
 					<state>$PROJ_DIR$\..\..\..\..\..\libraries\3rdparty\tinycbor\src</state>
-					<state>$PROJ_DIR$\..\..\..\..\..\libraries\3rdparty\jsmn</state>
 				</option>
 				<option>
 					<name>CCStdIncCheck</name>
@@ -2713,45 +2709,6 @@
 					</group>
 				</group>
 			</group>
-			<group>
-				<name>aws</name>
-				<group>
-					<name>greengrass</name>
-					<group>
-						<name>src</name>
-						<file>
-							<name>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\src\aws_greengrass_discovery.c</name>
-						</file>
-						<file>
-							<name>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\src\aws_helper_secure_connect.c</name>
-						</file>
-						<file>
-							<name>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\src\aws_helper_secure_connect.h</name>
-						</file>
-					</group>
-					<group>
-						<name>include</name>
-						<file>
-							<name>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\include\aws_ggd_config_defaults.h</name>
-						</file>
-						<file>
-							<name>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\include\aws_greengrass_discovery.h</name>
-						</file>
-					</group>
-					<group>
-						<name>test</name>
-						<file>
-							<name>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\test\aws_test_ggd_system.c</name>
-						</file>
-						<file>
-							<name>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\test\aws_test_ggd_unit.c</name>
-						</file>
-						<file>
-							<name>$PROJ_DIR$\..\..\..\..\..\libraries\freertos_plus\aws\greengrass\test\aws_test_helper_secure_connect.c</name>
-						</file>
-					</group>
-				</group>
-			</group>
 		</group>
 		<group>
 			<name>3rdparty</name>
@@ -3331,15 +3288,6 @@
 					</file>
 				</group>
 			</group>
-			<group>
-				<name>jsmn</name>
-				<file>
-					<name>$PROJ_DIR$\..\..\..\..\..\libraries\3rdparty\jsmn\jsmn.h</name>
-				</file>
-				<file>
-					<name>$PROJ_DIR$\..\..\..\..\..\libraries\3rdparty\jsmn\jsmn.c</name>
-				</file>
-			</group>
 		</group>
 		<group>
 			<name>logging</name>
@@ -3451,6 +3399,12 @@
 					<name>include</name>
 					<file>
 						<name>$PROJ_DIR$\..\..\..\..\..\libraries\coreJSON\source\include\core_json.h</name>
+					</file>
+					<file>
+						<name>$PROJ_DIR$\..\..\..\..\..\libraries\coreJSON\source\include\stdbool.readme</name>
+					</file>
+					<file>
+						<name>$PROJ_DIR$\..\..\..\..\..\libraries\coreJSON\source\include\stdint.readme</name>
 					</file>
 				</group>
 			</group>

@@ -1483,31 +1483,6 @@
 			<locationURI>BASE_DIR/demos/common/http_demo_helpers/http_demo_utils.c</locationURI>
 		</link>
 		<link>
-			<name>libraries/freertos_plus/aws/greengrass/src/aws_greengrass_discovery.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR/libraries/freertos_plus/aws/greengrass/src/aws_greengrass_discovery.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR/libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.h</name>
-			<type>1</type>
-			<locationURI>BASE_DIR/libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.h</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/include/aws_ggd_config_defaults.h</name>
-			<type>1</type>
-			<locationURI>BASE_DIR/libraries/freertos_plus/aws/greengrass/include/aws_ggd_config_defaults.h</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/include/aws_greengrass_discovery.h</name>
-			<type>1</type>
-			<locationURI>BASE_DIR/libraries/freertos_plus/aws/greengrass/include/aws_greengrass_discovery.h</locationURI>
-		</link>
-		<link>
 			<name>libraries/freertos_plus/standard/freertos_plus_cli/source/FreeRTOS_CLI.c</name>
 			<type>1</type>
 			<locationURI>BASE_DIR/libraries/freertos_plus/standard/freertos_plus_cli/source/FreeRTOS_CLI.c</locationURI>
@@ -1663,6 +1638,16 @@
 			<locationURI>BASE_DIR/libraries/coreJSON/source/include/core_json.h</locationURI>
 		</link>
 		<link>
+			<name>libraries/coreJSON/source/include/stdbool.readme</name>
+			<type>1</type>
+			<locationURI>BASE_DIR/libraries/coreJSON/source/include/stdbool.readme</locationURI>
+		</link>
+		<link>
+			<name>libraries/coreJSON/source/include/stdint.readme</name>
+			<type>1</type>
+			<locationURI>BASE_DIR/libraries/coreJSON/source/include/stdint.readme</locationURI>
+		</link>
+		<link>
 			<name>libraries/device_shadow_for_aws/source/shadow.c</name>
 			<type>1</type>
 			<locationURI>BASE_DIR/libraries/device_shadow_for_aws/source/shadow.c</locationURI>
@@ -1676,6 +1661,16 @@
 			<name>libraries/device_shadow_for_aws/source/include/shadow_config_defaults.h</name>
 			<type>1</type>
 			<locationURI>BASE_DIR/libraries/device_shadow_for_aws/source/include/shadow_config_defaults.h</locationURI>
+		</link>
+		<link>
+			<name>demos/common/mqtt_demo_helpers/mqtt_demo_helpers.c</name>
+			<type>1</type>
+			<locationURI>BASE_DIR/demos/common/mqtt_demo_helpers/mqtt_demo_helpers.c</locationURI>
+		</link>
+		<link>
+			<name>demos/include/aws_iot_metrics.h</name>
+			<type>1</type>
+			<locationURI>BASE_DIR/demos/include/aws_iot_metrics.h</locationURI>
 		</link>
 		<link>
 			<name>libraries/device_defender_for_aws/source/defender.c</name>
@@ -1826,21 +1821,6 @@
 			<name>libraries/c_sdk/standard/serializer/test/iot_tests_deserializer_json.c</name>
 			<type>1</type>
 			<locationURI>BASE_DIR/libraries/c_sdk/standard/serializer/test/iot_tests_deserializer_json.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/test/aws_test_ggd_system.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR/libraries/freertos_plus/aws/greengrass/test/aws_test_ggd_system.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/test/aws_test_ggd_unit.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR/libraries/freertos_plus/aws/greengrass/test/aws_test_ggd_unit.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/test/aws_test_helper_secure_connect.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR/libraries/freertos_plus/aws/greengrass/test/aws_test_helper_secure_connect.c</locationURI>
 		</link>
 		<link>
 			<name>libraries/freertos_plus/standard/crypto/test/iot_test_crypto.c</name>
@@ -2971,16 +2951,6 @@
 			<name>libraries/3rdparty/tinycbor/src/cborparser_dup_string.c</name>
 			<type>1</type>
 			<locationURI>BASE_DIR/libraries/3rdparty/tinycbor/src/cborparser_dup_string.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/3rdparty/jsmn/jsmn.h</name>
-			<type>1</type>
-			<locationURI>BASE_DIR/libraries/3rdparty/jsmn/jsmn.h</locationURI>
-		</link>
-		<link>
-			<name>libraries/3rdparty/jsmn/jsmn.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR/libraries/3rdparty/jsmn/jsmn.c</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources/>

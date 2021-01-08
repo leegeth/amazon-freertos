@@ -1893,31 +1893,6 @@
 			<locationURI>AWS_IOT_MCU_ROOT/demos/common/http_demo_helpers/http_demo_utils.c</locationURI>
 		</link>
 		<link>
-			<name>libraries/freertos_plus/aws/greengrass/src/aws_greengrass_discovery.c</name>
-			<type>1</type>
-			<locationURI>AWS_IOT_MCU_ROOT/libraries/freertos_plus/aws/greengrass/src/aws_greengrass_discovery.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.c</name>
-			<type>1</type>
-			<locationURI>AWS_IOT_MCU_ROOT/libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.h</name>
-			<type>1</type>
-			<locationURI>AWS_IOT_MCU_ROOT/libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.h</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/include/aws_ggd_config_defaults.h</name>
-			<type>1</type>
-			<locationURI>AWS_IOT_MCU_ROOT/libraries/freertos_plus/aws/greengrass/include/aws_ggd_config_defaults.h</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/include/aws_greengrass_discovery.h</name>
-			<type>1</type>
-			<locationURI>AWS_IOT_MCU_ROOT/libraries/freertos_plus/aws/greengrass/include/aws_greengrass_discovery.h</locationURI>
-		</link>
-		<link>
 			<name>libraries/freertos_plus/standard/freertos_plus_cli/source/FreeRTOS_CLI.c</name>
 			<type>1</type>
 			<locationURI>AWS_IOT_MCU_ROOT/libraries/freertos_plus/standard/freertos_plus_cli/source/FreeRTOS_CLI.c</locationURI>
@@ -1941,6 +1916,16 @@
 			<name>libraries/coreJSON/source/include/core_json.h</name>
 			<type>1</type>
 			<locationURI>AWS_IOT_MCU_ROOT/libraries/coreJSON/source/include/core_json.h</locationURI>
+		</link>
+		<link>
+			<name>libraries/coreJSON/source/include/stdbool.readme</name>
+			<type>1</type>
+			<locationURI>AWS_IOT_MCU_ROOT/libraries/coreJSON/source/include/stdbool.readme</locationURI>
+		</link>
+		<link>
+			<name>libraries/coreJSON/source/include/stdint.readme</name>
+			<type>1</type>
+			<locationURI>AWS_IOT_MCU_ROOT/libraries/coreJSON/source/include/stdint.readme</locationURI>
 		</link>
 		<link>
 			<name>libraries/device_shadow_for_aws/source/shadow.c</name>
@@ -3166,16 +3151,6 @@
 			<name>libraries/3rdparty/tinycbor/src/cborparser_dup_string.c</name>
 			<type>1</type>
 			<locationURI>AWS_IOT_MCU_ROOT/libraries/3rdparty/tinycbor/src/cborparser_dup_string.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/3rdparty/jsmn/jsmn.h</name>
-			<type>1</type>
-			<locationURI>AWS_IOT_MCU_ROOT/libraries/3rdparty/jsmn/jsmn.h</locationURI>
-		</link>
-		<link>
-			<name>libraries/3rdparty/jsmn/jsmn.c</name>
-			<type>1</type>
-			<locationURI>AWS_IOT_MCU_ROOT/libraries/3rdparty/jsmn/jsmn.c</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

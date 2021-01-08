@@ -948,31 +948,6 @@
 			<locationURI>BASE_DIR_ROOT/demos/common/http_demo_helpers/http_demo_utils.c</locationURI>
 		</link>
 		<link>
-			<name>libraries/freertos_plus/aws/greengrass/src/aws_greengrass_discovery.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR_ROOT/libraries/freertos_plus/aws/greengrass/src/aws_greengrass_discovery.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR_ROOT/libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.h</name>
-			<type>1</type>
-			<locationURI>BASE_DIR_ROOT/libraries/freertos_plus/aws/greengrass/src/aws_helper_secure_connect.h</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/include/aws_ggd_config_defaults.h</name>
-			<type>1</type>
-			<locationURI>BASE_DIR_ROOT/libraries/freertos_plus/aws/greengrass/include/aws_ggd_config_defaults.h</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/include/aws_greengrass_discovery.h</name>
-			<type>1</type>
-			<locationURI>BASE_DIR_ROOT/libraries/freertos_plus/aws/greengrass/include/aws_greengrass_discovery.h</locationURI>
-		</link>
-		<link>
 			<name>libraries/freertos_plus/aws/ota/include/aws_iot_ota_agent.h</name>
 			<type>1</type>
 			<locationURI>BASE_DIR_ROOT/libraries/freertos_plus/aws/ota/include/aws_iot_ota_agent.h</locationURI>
@@ -1071,6 +1046,16 @@
 			<name>libraries/coreJSON/source/include/core_json.h</name>
 			<type>1</type>
 			<locationURI>BASE_DIR_ROOT/libraries/coreJSON/source/include/core_json.h</locationURI>
+		</link>
+		<link>
+			<name>libraries/coreJSON/source/include/stdbool.readme</name>
+			<type>1</type>
+			<locationURI>BASE_DIR_ROOT/libraries/coreJSON/source/include/stdbool.readme</locationURI>
+		</link>
+		<link>
+			<name>libraries/coreJSON/source/include/stdint.readme</name>
+			<type>1</type>
+			<locationURI>BASE_DIR_ROOT/libraries/coreJSON/source/include/stdint.readme</locationURI>
 		</link>
 		<link>
 			<name>libraries/device_shadow_for_aws/source/shadow.c</name>
@@ -1246,21 +1231,6 @@
 			<name>libraries/c_sdk/standard/serializer/test/iot_tests_deserializer_json.c</name>
 			<type>1</type>
 			<locationURI>BASE_DIR_ROOT/libraries/c_sdk/standard/serializer/test/iot_tests_deserializer_json.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/test/aws_test_ggd_system.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR_ROOT/libraries/freertos_plus/aws/greengrass/test/aws_test_ggd_system.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/test/aws_test_ggd_unit.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR_ROOT/libraries/freertos_plus/aws/greengrass/test/aws_test_ggd_unit.c</locationURI>
-		</link>
-		<link>
-			<name>libraries/freertos_plus/aws/greengrass/test/aws_test_helper_secure_connect.c</name>
-			<type>1</type>
-			<locationURI>BASE_DIR_ROOT/libraries/freertos_plus/aws/greengrass/test/aws_test_helper_secure_connect.c</locationURI>
 		</link>
 		<link>
 			<name>libraries/freertos_plus/aws/ota/test/aws_test_ota_agent.c</name>

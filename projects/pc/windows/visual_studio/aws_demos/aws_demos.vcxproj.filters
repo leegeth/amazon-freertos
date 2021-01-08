@@ -103,12 +103,9 @@
 		<Filter Include="libraries\coreHTTP\source\include"/>
 		<Filter Include="libraries\coreHTTP\source\interface"/>
 		<Filter Include="demos\common\http_demo_helpers"/>
-		<Filter Include="libraries\freertos_plus\aws\greengrass\src"/>
-		<Filter Include="libraries\freertos_plus\aws\greengrass"/>
-		<Filter Include="libraries\freertos_plus\aws"/>
-		<Filter Include="libraries\freertos_plus\aws\greengrass\include"/>
 		<Filter Include="libraries\freertos_plus\aws\ota\include"/>
 		<Filter Include="libraries\freertos_plus\aws\ota"/>
+		<Filter Include="libraries\freertos_plus\aws"/>
 		<Filter Include="libraries\freertos_plus\aws\ota\src"/>
 		<Filter Include="libraries\3rdparty\mbedtls\library"/>
 		<Filter Include="libraries\3rdparty\mbedtls"/>
@@ -441,15 +438,6 @@
 		<ClInclude Include="..\..\..\..\..\libraries\coreHTTP\source\dependency\3rdparty\http_parser\http_parser.h">
 			<Filter>libraries\coreHTTP\source\dependency\3rdparty\http_parser</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\..\..\..\libraries\freertos_plus\aws\greengrass\src\aws_helper_secure_connect.h">
-			<Filter>libraries\freertos_plus\aws\greengrass\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\..\..\libraries\freertos_plus\aws\greengrass\include\aws_ggd_config_defaults.h">
-			<Filter>libraries\freertos_plus\aws\greengrass\include</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\..\..\libraries\freertos_plus\aws\greengrass\include\aws_greengrass_discovery.h">
-			<Filter>libraries\freertos_plus\aws\greengrass\include</Filter>
-		</ClInclude>
 		<ClInclude Include="..\..\..\..\..\libraries\freertos_plus\aws\ota\include\aws_iot_ota_agent.h">
 			<Filter>libraries\freertos_plus\aws\ota\include</Filter>
 		</ClInclude>
@@ -526,6 +514,12 @@
 			<Filter>libraries\freertos_plus\standard\freertos_plus_posix\include</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\..\..\libraries\coreJSON\source\include\core_json.h">
+			<Filter>libraries\coreJSON\source\include</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\..\..\libraries\coreJSON\source\include\stdbool.readme">
+			<Filter>libraries\coreJSON\source\include</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\..\..\libraries\coreJSON\source\include\stdint.readme">
 			<Filter>libraries\coreJSON\source\include</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\..\..\libraries\device_shadow_for_aws\source\include\shadow.h">
@@ -1072,12 +1066,6 @@
 		</ClCompile>
 		<ClCompile Include="..\..\..\..\..\demos\common\http_demo_helpers\http_demo_utils.c">
 			<Filter>demos\common\http_demo_helpers</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\..\..\libraries\freertos_plus\aws\greengrass\src\aws_greengrass_discovery.c">
-			<Filter>libraries\freertos_plus\aws\greengrass\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\..\..\libraries\freertos_plus\aws\greengrass\src\aws_helper_secure_connect.c">
-			<Filter>libraries\freertos_plus\aws\greengrass\src</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\..\..\libraries\freertos_plus\aws\ota\src\aws_iot_ota_agent.c">
 			<Filter>libraries\freertos_plus\aws\ota\src</Filter>
